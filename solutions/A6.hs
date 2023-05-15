@@ -2,37 +2,71 @@ module A6 where
 
 import Provided
 
-import Data.List ( intersperse, sort )
+import Data.List( intersperse, sort, elemIndex)
 
 -- *** A6-0: WARM-UP *** --
 
 -- Q#01
 
+type Chances = Int
+type Guess   = String
+type Move    = Char
+type Secret  = String
+type Dictionary = [String]
+
 
 -- Q#02
-data GameException
+data GameException = InvalidWord | InvalidMove | RepeatMove | GameOver
 
 -- Q#03
 
-lengthInRange = undefined
+{- _LENGTH_ :: Int
+_LENGTH_ = 20 -}
+
+lengthInRange :: Secret -> Bool
+lengthInRange s = (length s >= fst _LENGTH_) && (length s <= snd _LENGTH_)
 
 -- Q#04
 
-invalidMove = undefined
+invalidMove :: Move -> Bool
+invalidMove m = not(('a' <= m && m <= 'z') || ('A' <= m && m <= 'Z'))
 
 -- Q#05
 
-revealLetters = undefined
+getNumber :: Maybe Int -> Int
+getNumber (Just n) = n
+getNumber _    = 0
+
+matchElem :: Char -> String -> [Int]
+matchElem n xs = [y | (y,z) <- zip [1..] xs, z==n]
+
+replace _ _ [] = []
+replace k _ xs | k < 0 = xs
+replace 0 c (x:xs) = c : xs
+replace k c (x:xs) = x : replace (k-1) c xs
+
+revealLetters :: Move -> Secret -> Guess -> Guess
+-- Start with underscores equaling secret phrase
+-- check move if character matches any element in secret
+-- take indices of matching characters and replace _ with move char
+-- Guess is what has been guessed so far
+revealLetters m s g = (replicate (length(s)) '_')
+
+(matchElem m s)
+
+-- elemIndex 'm' "Hellom"
+-- (zipWith (,) [1..] s)
 
 -- Q#06
 
-updateChances = undefined
+updateChances :: Move-> Secret -> Chances -> Chances
+updateChances m s c = undefined
 
 -- Q#07
 
-setSecret = undefined
-
-
+setSecret :: IO ()
+setSecret = do
+  putStr "Enter a secret word:\t"
 -- *** A6-1: Records & Instances *** --
 
 -- Q#08
