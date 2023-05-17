@@ -2,7 +2,7 @@ module A6 where
 
 import Provided
 
-import Data.List( intersperse, sort, elemIndex)
+import Data.List( intersperse, sort, elemIndex, intercalate)
 
 -- *** A6-0: WARM-UP *** --
 
@@ -33,48 +33,78 @@ invalidMove m = not(('a' <= m && m <= 'z') || ('A' <= m && m <= 'Z'))
 
 -- Q#05
 
-getNumber :: Maybe Int -> Int
-getNumber (Just n) = n
-getNumber _    = 0
-
 matchElem :: Char -> String -> [Int]
 matchElem n xs = [y | (y,z) <- zip [1..] xs, z==n]
 
+{- replace :: Int -> Char -> String -> String
 replace _ _ [] = []
 replace k _ xs | k < 0 = xs
 replace 0 c (x:xs) = c : xs
-replace k c (x:xs) = x : replace (k-1) c xs
+replace k c (x:xs) = x : replace (k-1) c xs -}
 
-revealLetters :: Move -> Secret -> Guess -> Guess
+replaceChar :: Char -> Char -> Char
+replaceChar c x = c 
+
+
 -- Start with underscores equaling secret phrase
 -- check move if character matches any element in secret
 -- take indices of matching characters and replace _ with move char
 -- Guess is what has been guessed so far
-revealLetters m s g = (replicate (length(s)) '_')
 
-(matchElem m s)
+{- revealLetters :: Move -> Secret -> Guess -> Guess
+revealLetters m s (g:gs) = replace head(matchIndex m s) m g revealLetters -}
 
+revealLetters :: Move -> Secret -> Guess -> Guess
+revealLetters m _ [] = []
+revealLetters m [] _ = []
+revealLetters m (s:ss) (g:gs) = if m == s then replaceChar m g : revealLetters m ss gs else g : revealLetters m ss gs
+
+{-   map (replaceChar) (matchIndex m s) m g revealLetters-}
+
+{- revealLetters :: Move -> Secret -> Guess -> Guess
+revealLetters m s g = intercalate [m] [fst(splitAt (head (matchIndex m s)) g), tail(snd(splitAt (head (matchIndex m s)) g))] 
+  where
+    matchIndex :: Move -> Secret -> [Int]
+    matchIndex m s = ((\c s -> [y | (y,z) <- zip [1..] s, z==c]) m s)
+ -}
+{- matchLetter = 
+intercalate m [fst(splitAt 2 g), tail(snd(splitAt 2 g))] -}
 -- elemIndex 'm' "Hellom"
 -- (zipWith (,) [1..] s)
 
 -- Q#06
 
 updateChances :: Move-> Secret -> Chances -> Chances
-updateChances m s c = undefined
+updateChances m s c = if m `elem` s then c else (c-1)
 
 -- Q#07
 
 setSecret :: IO ()
 setSecret = do
   putStr "Enter a secret word:\t"
+  showInput False
+  s <- getLine
+  showInput True
+  _SPACE_
+  return ()
 -- *** A6-1: Records & Instances *** --
 
 -- Q#08
-data Game
+data Game = Game { secret :: Secret
+                 , thisGuess :: Guess
+                 , moveList  :: [Move]
+                 , chances   :: Chances}
+                 deriving (Eq, Show)
 
 -- Q#09
 
-repeatedMove = undefined
+instance Game where
+  getMoveList :: Game -> [Move]
+  getMoveList g = moveList
+  
+
+repeatedMove :: Move -> Game -> Bool
+repeatedMove m state = m `elem` (state m)
 
 -- Q#10
 
