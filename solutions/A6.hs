@@ -36,41 +36,16 @@ invalidMove m = not(('a' <= m && m <= 'z') || ('A' <= m && m <= 'Z'))
 matchElem :: Char -> String -> [Int]
 matchElem n xs = [y | (y,z) <- zip [1..] xs, z==n]
 
-{- replace :: Int -> Char -> String -> String
-replace _ _ [] = []
-replace k _ xs | k < 0 = xs
-replace 0 c (x:xs) = c : xs
-replace k c (x:xs) = x : replace (k-1) c xs -}
-
-replaceChar :: Char -> Char -> Char
-replaceChar c x = c 
-
 
 -- Start with underscores equaling secret phrase
 -- check move if character matches any element in secret
 -- take indices of matching characters and replace _ with move char
 -- Guess is what has been guessed so far
 
-{- revealLetters :: Move -> Secret -> Guess -> Guess
-revealLetters m s (g:gs) = replace head(matchIndex m s) m g revealLetters -}
-
 revealLetters :: Move -> Secret -> Guess -> Guess
 revealLetters m _ [] = []
 revealLetters m [] _ = []
-revealLetters m (s:ss) (g:gs) = if m == s then replaceChar m g : revealLetters m ss gs else g : revealLetters m ss gs
-
-{-   map (replaceChar) (matchIndex m s) m g revealLetters-}
-
-{- revealLetters :: Move -> Secret -> Guess -> Guess
-revealLetters m s g = intercalate [m] [fst(splitAt (head (matchIndex m s)) g), tail(snd(splitAt (head (matchIndex m s)) g))] 
-  where
-    matchIndex :: Move -> Secret -> [Int]
-    matchIndex m s = ((\c s -> [y | (y,z) <- zip [1..] s, z==c]) m s)
- -}
-{- matchLetter = 
-intercalate m [fst(splitAt 2 g), tail(snd(splitAt 2 g))] -}
--- elemIndex 'm' "Hellom"
--- (zipWith (,) [1..] s)
+revealLetters m (s:ss) (g:gs) = if m == s then m : revealLetters m ss gs else g : revealLetters m ss gs
 
 -- Q#06
 
