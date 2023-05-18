@@ -50,7 +50,7 @@ revealLetters m (s:ss) (g:gs) = if m == s then m : revealLetters m ss gs else g 
 -- Q#06
 
 updateChances :: Move-> Secret -> Chances -> Chances
-updateChances m s c = if m `elem` s then c else (c-1)
+updateChances m s c = if m `elem` s then c else c-1
 
 -- Q#07
 
@@ -73,17 +73,18 @@ data Game = Game { secret :: Secret
 
 -- Q#09
 
-instance Game where
+{- instance Game where
   getMoveList :: Game -> [Move]
-  getMoveList g = moveList
+  getMoveList g = moveList -}
   
 
-repeatedMove :: Move -> Game -> Bool
-repeatedMove m state = m `elem` (state m)
+{- repeatedMove :: Move -> Game -> Bool
+repeatedMove m state = m `elem` (state m) -}
 
 -- Q#10
 
-makeGame = undefined
+makeGame :: Secret -> Game
+makeGame s = Game setSecret (map (const '_') (length s)) [] _CHANCES_
 
 -- Q#11
 
