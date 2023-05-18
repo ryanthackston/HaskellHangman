@@ -3,6 +3,8 @@ module A6 where
 import Provided
 
 import Data.List ( intersperse, sort )
+import Data.Char ( isAlpha, toLower, toUpper )
+
 
 -- *** A6-0: WARM-UP *** --
 
