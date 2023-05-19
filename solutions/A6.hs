@@ -136,9 +136,24 @@ instance Show Game where
 
 instance Show GameException where
   show :: GameException -> String
-  show ge = unlines [
+  show InvalidWord = unlines [
         _STARS_
-        , show (ge) 
+        , "\tYou Entered An Invalid Word!"
+        , _STARS_
+        ]
+  show InvalidMove = unlines [
+        _STARS_
+        , "\tYou Entered An Invalid Move!"
+        , _STARS_
+        ]
+  show RepeatMove = unlines [
+        _STARS_
+        , "\tYou Entered A Letter That Has Already Been Tried"
+        , _STARS_
+        ]
+  show GameOver = unlines [
+        _STARS_
+        , "\tGame Over! Try Again?"
         , _STARS_
         ]
 
