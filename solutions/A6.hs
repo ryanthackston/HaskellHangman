@@ -2,13 +2,9 @@ module A6 where
 
 import Provided
 
-<<<<<<< HEAD
 import Data.List( intersperse, sort, elemIndex, intercalate)
-=======
 import Data.List ( intersperse, sort )
 import Data.Char ( isAlpha, toLower, toUpper )
-
->>>>>>> 74e9dfbb04cccac6cf8b2468e7b8efd6aa4eef79
 
 -- *** A6-0: WARM-UP *** --
 
@@ -60,14 +56,15 @@ updateChances m s c = if m `elem` s then c else c-1
 
 -- Q#07
 
-setSecret :: IO ()
+setSecret :: IO String
 setSecret = do
   putStr "Enter a secret word:\t"
   showInput False
   s <- getLine
   showInput True
-  _SPACE_
-  return ()
+  _SPACE_ 
+  return s
+
 -- *** A6-1: Records & Instances *** --
 
 -- Q#08
@@ -90,7 +87,7 @@ repeatedMove m state = m `elem` (state m) -}
 -- Q#10
 
 makeGame :: Secret -> Game
-makeGame s = Game setSecret (map (const '_') (length s)) [] _CHANCES_
+makeGame s = Game s (map (const '_') [1.. (length s)] ) ['q'] _CHANCES_
 
 -- Q#11
 
