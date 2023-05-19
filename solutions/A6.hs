@@ -1,3 +1,5 @@
+{-# LANGUAGE InstanceSigs #-}
+
 module A6 where
 
 import Provided
@@ -52,7 +54,7 @@ revealLetters m (s:ss) (g:gs) = if m == s then m : revealLetters m ss gs else g 
 -- Q#06
 
 updateChances :: Move-> Secret -> Chances -> Chances
-updateChances m s c = if m `elem` s then c else c-1
+updateChances m s c = if (toUpper m) `elem` s then c else c-1
 
 -- Q#07
 
@@ -72,7 +74,7 @@ data Game = Game { secret :: Secret
                  , thisGuess :: Guess
                  , moveList  :: [Move]
                  , chances   :: Chances}
-                 deriving (Eq, Show)
+                 {- deriving (Eq, Show) -}
 
 -- Q#09
 
@@ -81,12 +83,24 @@ repeatedMove m g = m `elem` (moveList g)
 
 -- Q#10
 
+
+
+
 makeGame :: Secret -> Game
-makeGame s = Game s (map (const '_') [1.. (length s)] ) [] _CHANCES_
+makeGame s = Game (map toUpper s) (map (const '_') [1.. (length s)] ) [] _CHANCES_
 
 -- Q#11
 
-updateGame = undefined
+updateGame :: Move -> Game -> Game
+updateGame m g = g {thisGuess = updateG, moveList = updateM, chances = updateC }
+  where
+    updateG   = revealLetters (toUpper m) (secret g) (thisGuess g)
+    updateM   = (toUpper m) : (moveList g)
+    updateC   = updateChances m (secret g) (chances g)
+
+-- revealLetters 'a' (secret z) (thisGuess z) -- update the guess field
+-- 'm':(moveList z) -- Add the move character 
+-- updateChances m (secret z) (chances z)
 
 -- Q#12
 
@@ -99,8 +113,35 @@ showGameHelper game moves chances = unlines [
     , _STARS_
     ]
 
+{- z = makeGame "lalala"
+zz = updateGame 'm' z
+zzz = updateGame 'a' zz
+(showGameHelper (thisGuess zzz) (moveList zzz) (chances zzz)) -}
+
+instance Show Game where
+  show :: Game -> String
+  show g = unlines [
+      _STARS_
+    , "\tSecret Word:\t" ++ intersperse ' ' (thisGuess g) ++ "\n"
+    , "\tGuessed:\t" ++ intersperse ' ' (sort (moveList g)) ++ "\n"
+    , "\tChances:\t" ++ show (chances g)
+    , _STARS_
+    ]
+
+
 
 -- Q#13
+
+-- data GameException = InvalidWord | InvalidMove | RepeatMove | GameOver
+
+instance Show GameException where
+  show :: GameException -> String
+  show ge = unlines [
+        _STARS_
+        , show (ge) 
+        , _STARS_
+        ]
+
 
 
 -- *** A6-2: Exception Contexts *** --
