@@ -76,18 +76,13 @@ data Game = Game { secret :: Secret
 
 -- Q#09
 
-{- instance Game where
-  getMoveList :: Game -> [Move]
-  getMoveList g = moveList -}
-  
-
-{- repeatedMove :: Move -> Game -> Bool
-repeatedMove m state = m `elem` (state m) -}
+repeatedMove :: Move -> Game -> Bool
+repeatedMove m g = m `elem` (moveList g)
 
 -- Q#10
 
 makeGame :: Secret -> Game
-makeGame s = Game s (map (const '_') [1.. (length s)] ) ['q'] _CHANCES_
+makeGame s = Game s (map (const '_') [1.. (length s)] ) [] _CHANCES_
 
 -- Q#11
 
